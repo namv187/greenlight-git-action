@@ -25,9 +25,8 @@ jobs:
 
       - name: Add period to file
         run: |
-          # Append a period to the end of line 5 in file.txt
-          sed -i '5s/$/./' file.txt
-
+          echo -n "." >> file.txt
+    
       - name: Commit changes
         run: |
           git config --global user.name "github-actions[bot]"
