@@ -1,0 +1,37 @@
+name: Add Period Random Times
+
+on:
+  schedule:
+    # Run twice daily at a base time (UTC)
+    - cron: '0 6,18 * * *'  # 6:00 UTC and 18:00 UTC
+  workflow_dispatch:  # allow manual runs too
+
+permissions:
+  contents: write
+
+jobs:
+  edit-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Random delay before starting
+        run: |
+          # Delay between 0 and 1800 seconds (0–30 min)
+          delay=$(( RANDOM % 1800 ))
+          echo "Sleeping for $delay seconds..."
+          sleep $delay
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Add period to file
+        run: |
+          # Append a period to the end of line 5 in file.txt
+          sed -i '5s/$/./' file.txt
+
+      - name: Commit changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add file.txt
+          git commit -m "Add period to file" || echo "No changes to commit"
+          git push
