@@ -22,6 +22,7 @@ jobs:
       
     steps:
       - name: Random delay before starting
+        if: ${{ github.event_name != 'workflow_dispatch' }}
         run: |
           # Delay between 0 and 1800 seconds (0–30 min)
           delay=$(( RANDOM % 1800 ))
