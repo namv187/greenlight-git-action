@@ -46,6 +46,12 @@ jobs:
           git add "$FILE_PATH"
           git commit -m "$COMMIT_MESSAGE" || echo "No changes to commit"
 
+      - name: Sync with remote main
+        run: |
+          git fetch origin main
+          # rebase our commit(s) atop the latest remote main
+          git rebase origin/main || (git rebase --abort && exit 1)
+
       - name: Push with PAT (shows as your account)
         run: |
           git remote set-url origin "https://${GH_PAT}@github.com/${{ github.repository }}.git"
