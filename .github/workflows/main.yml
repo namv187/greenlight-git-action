@@ -1,3 +1,4 @@
+---
 name: Add Period Random Times
 
 on:
@@ -9,16 +10,16 @@ on:
 permissions:
   contents: write
 
-env:
-  # Defaults come from repo Variables; provide safe fallbacks
-  FILE_PATH: ${{ vars.FILE_PATH || 'file.txt' }}
-  COMMIT_NAME: ${{ vars.COMMIT_NAME || github.actor }}
-  COMMIT_EMAIL: ${{ vars.COMMIT_EMAIL }}
-  COMMIT_MESSAGE: ${{ vars.COMMIT_MESSAGE || 'added period' }}
-
 jobs:
   edit-file:
     runs-on: ubuntu-latest
+    env:
+      FILE_PATH: ${{ vars.FILE_PATH || 'file.txt' }}
+      COMMIT_NAME: ${{ vars.COMMIT_NAME || github.actor }}
+      COMMIT_EMAIL: ${{ vars.COMMIT_EMAIL }}
+      COMMIT_MESSAGE: ${{ vars.COMMIT_MESSAGE || 'added period' }}
+      GH_PAT: ${{ secrets.GH_PAT }}
+      
     steps:
       - name: Random delay before starting
         run: |
@@ -45,8 +46,6 @@ jobs:
           git commit -m "$COMMIT_MESSAGE" || echo "No changes to commit"
 
       - name: Push with PAT (shows as your account)
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
         run: |
           git remote set-url origin "https://${GH_PAT}@github.com/${{ github.repository }}.git"
           git push
